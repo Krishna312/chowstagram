@@ -3,12 +3,14 @@
 <h1>Posts</h1>
 
   <div class="row">
-    <div class="col s12 m7">
+    <div class="col s12 m7 offset-s2">
       <% @posts.each do |post| %>
         <div class="card">
+
           <div class="card-image">
-            <%= image_tag post.image, style: "width:500px; height: auto;" %>
+            <%= image_tag post.image, style: " height: auto;" %>
           </div>
+
           <div class="card-content">
             <p>
               <%= link_to "Image", post %><br>
@@ -18,25 +20,61 @@
             <strong>Description</strong><br>
               <%= post.description %> <br>
           </div>
+
           <div class="card-action">
-            <%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %>
-            <%= link_to like_post_path(post), method: :put do %>
-                Upvote
-                <%= post.get_upvotes.size %>
+              <p><%= post.get_upvotes.size %> likes
+                <br>
+                <!-- gets users who upvote -->
+                <!-- "model"."action_array"."attribute"."for each" do |"function name|" -->
+                <!-- "attribute"."value" -->
+                <% post.get_upvotes.voters.each do |voter| %>
+                <%= voter.email %>
+                &nbsp
+                <% end %>
+              </p>
+            </div>
+
+
+          <div class="card-action">
+              <%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+              <% if current_user %>
+                <% if current_user.voted_up_on? post %>
+                  <a>
+                    <%= link_to dislike_post_path(post), method: :put do %>
+                      <i class="fa fa-heart" aria-hidden="true"></i>
+                    <% end %>
+                  </a>
+                <% else %>
+                  <a>
+                    <%= link_to like_post_path(post), method: :put do %>
+                    <i class="fa fa-heart-o" aria-hidden="true"></i>
+                    <% end %>
+                  </a>
+                <% end %>
+                <% else %>
+                  <p>
+                    Please sign in
+                  </p>
             <% end %>
-            <%= link_to dislike_post_path(post), method: :put do %>
+
+            </div>
+          <!-- <div class="card-action">
+            <%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+
+            <%= link_to like_post_path(post), method: :put do %>
+                <i class="fa fa-heart" aria-hidden="true"></i>
+                <%= post.get_upvotes.size %>
+            <% end %> -->
+
+            <!-- <%= link_to dislike_post_path(post), method: :put do %>
                   Downvote
                   <%= post.get_downvotes.size %>
-            <% end %>
-          </div>
+            <% end %> -->
+
         </div>
         <% end %>
       </div>
     </div>
-
-  <br>
-
-
 
 
 <%= link_to 'New Post', new_post_path %>

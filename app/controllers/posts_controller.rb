@@ -56,6 +56,11 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
     @post.upvote_by current_user
     redirect_to :back
+
+    # current_user.voted_as_when_voted_for @comment1 # => true, he liked it
+    # current_user.voted_as_when_voted_for @comment2 # => false, he didnt like it
+    # current_user.voted_as_when_voted_for @comment3
+
   end
 
   def downvote
